@@ -77,7 +77,8 @@ const SignUp = () => {
           email,
           password,
           uid: uuid(),
-        }
+        },
+        { withCredentials: true }
       );
       console.log(data);
       navigate("/login");
