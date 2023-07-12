@@ -26,7 +26,8 @@ const Comments = () => {
           headers: {
             Authorization: `Bearer ${cookies["accessToken"]}`,
           },
-        }
+        },
+        { withCredentials: true }
       );
     },
   });
