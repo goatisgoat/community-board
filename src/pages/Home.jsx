@@ -1,22 +1,32 @@
 import React from "react";
 import styled from "styled-components";
 import Navi from "../components/Navi";
-import Footer from "../components/Footer";
-import Comments from "../components/Comments";
-import Users from "../components/Users";
+import Comments from "../components/home/Comments";
+import SideBar from "../components/home/SideBar";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
 
 const Home = () => {
   const navigate = useNavigate();
+  const { userSlice, isUser } = useSelector((state) => state.userSlice);
+
+  console.log(userSlice, "sdfsfdfsd");
+
+  const goToWriting = () => {
+    if (isUser) {
+      navigate("/write");
+    }
+  };
   return (
     <>
       <Navi />
       <Container>
-        <Users />
+        <SideBar />
         <Comments />
-        <UserInputBtn onClick={() => navigate("/write")}>+</UserInputBtn>
+        <UserInputBtn onClick={() => goToWriting}>+</UserInputBtn>
       </Container>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

@@ -2,12 +2,17 @@ import React from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { handleSearchSlice } from "../redux/moduls/homeSlice";
 import Button from "./Button";
+import { useCookies } from "react-cookie";
+import { useSelector } from "react-redux";
 
-const Navi = () => {
+const Navi = ({ children }) => {
+  const { isUser } = useSelector((state) => state.userSlice);
+  const location = useLocation();
+  const [cookies, setCookie, removeCookie] = useCookies();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -24,14 +29,18 @@ const Navi = () => {
     navigate("/signup");
   };
 
+  const LogOut = () => {
+    removeCookie("accessToken", { path: "/" });
+    window.location.reload();
+  };
   const handleSearch = (e) => {
     e.preventDefault();
     const userSearch = e.target[0].value;
     dispatch(handleSearchSlice(userSearch));
   };
   return (
-    <NavContainer>
-      <Logospan>
+    <NavContainer navlo={location.pathname} propsch={children}>
+      <Logospan navlo={location.pathname}>
         <h1 onClick={goToHome}>Logo</h1>
         <p onClick={goToHome}>Home</p>
         <p onClick={goToHome}>Mypage</p>
@@ -43,8 +52,15 @@ const Navi = () => {
             <FontAwesomeIcon icon={faMagnifyingGlass} />
           </button>
         </SearchForm>
-        <Button onClick={goToLogIn}>Log In</Button>
-        <Button onClick={goToSignUp}>Sign Up</Button>
+        {!isUser ? (
+          <>
+            {" "}
+            <Button onClick={goToLogIn}>Log In</Button>
+            <Button onClick={goToSignUp}>Sign Up</Button>
+          </>
+        ) : (
+          <Button onClick={LogOut}>Log Out</Button>
+        )}
       </Searchspan>
     </NavContainer>
   );
@@ -55,7 +71,8 @@ export default Navi;
 const NavContainer = styled.div`
   width: 100%;
   height: 60px;
-  background-color: white;
+  background-color: ${(props) =>
+    props.navlo === props.propsch ? "transparent" : "white"};
   position: fixed;
   top: 0;
   left: 0;
@@ -63,6 +80,8 @@ const NavContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-bottom: ${(props) =>
+    props.navlo === props.propsch ? "transparent" : "1px solid #767e7a85"};
   z-index: 999;
 
   & > div {
@@ -85,6 +104,7 @@ const Logospan = styled.span`
     cursor: pointer;
   }
   & > p {
+    color: ${(props) => (props.navlo === "/login" ? "#6a9582;" : "gray")};
     margin-left: 8px;
     font-size: 15px;
     font-family: sans-serif;

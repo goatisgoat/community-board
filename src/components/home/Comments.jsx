@@ -1,28 +1,35 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useQuery } from "react-query";
 import Edit from "./Edit";
+import axios from "axios";
+import { useQuery } from "react-query";
+import { useSelector } from "react-redux";
+import { useCookies } from "react-cookie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
-import { useSelector } from "react-redux";
 import dompurify from "dompurify";
 import ClipLoader from "react-spinners/ClipLoader";
-import { getComments } from "../api/comments";
 
 const Comments = () => {
   const [updateState, setUpdateState] = useState(-1);
   const { searchSlice } = useSelector((state) => state.homeSlice);
+  const { userSlice } = useSelector((state) => state.userSlice);
   const sanitizer = dompurify.sanitize;
+  const [cookies, setCookie, removeCookie] = useCookies();
 
-  // const { isLoading, isError, data } = useQuery({
-  //   queryKey: ["comments", searchSlice],
-  //   queryFn: () => {
-  //     return axios.get(`http://localhost:3001/comments?_sort=id&_order=desc`);
-  //   },
-  // });
-
-  const { isLoading, isError, data } = useQuery("comments", getComments);
+  const { isLoading, isError, data } = useQuery({
+    queryKey: ["comments", searchSlice],
+    queryFn: () => {
+      return axios.get(
+        `${process.env.REACT_APP_DB_URL}/comments?_sort=id&_order=desc`,
+        {
+          headers: {
+            Authorization: `Bearer ${cookies["accessToken"]}`,
+          },
+        }
+      );
+    },
+  });
 
   console.log(data);
 
@@ -36,7 +43,6 @@ const Comments = () => {
         className="spinner"
         color="red"
         loading={true}
-        // cssOverride={}
         size={150}
         aria-label="Loading Spinner"
         data-testid="loader"
@@ -45,7 +51,7 @@ const Comments = () => {
   }
 
   if (isError) {
-    return <p>오류가 발생하였습니다...!</p>;
+    return <p>오류가 발생하였습니다</p>;
   }
 
   return (
@@ -55,12 +61,15 @@ const Comments = () => {
           <Edit key={item.id} item={item} setUpdateState={setUpdateState} />
         ) : (
           <CommentsContainer key={item.id}>
-            <FontSpan>
-              <FontAwesomeIcon
-                onClick={() => handleEditState(item.id)}
-                icon={faPenToSquare}
-              />
-            </FontSpan>
+            {item.uid === userSlice.uid ? (
+              <FontSpan>
+                <FontAwesomeIcon
+                  onClick={() => handleEditState(item.id)}
+                  icon={faPenToSquare}
+                />
+              </FontSpan>
+            ) : null}
+
             <UserImgSpan>
               <div></div>
               <p>name</p>

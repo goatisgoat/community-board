@@ -4,8 +4,10 @@ import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
-import Footer from "./components/Footer";
+
 import Write from "./pages/Write";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
 
 const queryClient = new QueryClient();
 
@@ -18,6 +20,7 @@ function App() {
         <Route path="/signup" element={<SignUp />}></Route>
         <Route path="/write" element={<Write />}></Route>
       </Routes>
+      <ToastContainer />
     </QueryClientProvider>
   );
 }

@@ -1,16 +1,21 @@
 import React, { useState, useMemo, useRef } from "react";
 import styled from "styled-components";
+import Button from "../Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotateLeft } from "@fortawesome/free-solid-svg-icons";
 import { useMutation, useQueryClient } from "react-query";
-import { storage } from "../firebase";
+import { storage } from "../../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import axios from "axios";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import Button from "./Button";
+import { useCookies } from "react-cookie";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const Edit = ({ item, setUpdateState }) => {
+  const [cookies, setCookie, removeCookie] = useCookies();
+  const { userSlice } = useSelector((state) => state.userSlice);
   //qill
   const [value, setValue] = useState(item.content);
   const quillRef = useRef();
@@ -43,7 +48,7 @@ const Edit = ({ item, setUpdateState }) => {
             }
           },
           (error) => {
-            console.log(error);
+            toast.error("error!");
           },
           () => {
             getDownloadURL(uploadTask.snapshot.ref).then(
@@ -58,7 +63,7 @@ const Edit = ({ item, setUpdateState }) => {
           }
         );
       } catch (error) {
-        console.log(error);
+        toast.error("error!");
       }
     });
   };
@@ -91,8 +96,16 @@ const Edit = ({ item, setUpdateState }) => {
   //react-query
   const queryClient = useQueryClient();
   const editMutation = useMutation(
-    (newTodo) => {
-      return axios.patch(`http://localhost:3001/comments/${item.id}`, newTodo);
+    (editInfo) => {
+      return axios.patch(
+        `${process.env.REACT_APP_DB_URL}/comments/${item.id}`,
+        editInfo,
+        {
+          headers: {
+            Authorization: `Bearer ${cookies["accessToken"]}`,
+          },
+        }
+      );
     },
     {
       onSuccess: () => {
@@ -103,7 +116,14 @@ const Edit = ({ item, setUpdateState }) => {
 
   const deleteMutation = useMutation(
     () => {
-      return axios.delete(`http://localhost:3001/comments/${item.id}`);
+      return axios.delete(
+        `${process.env.REACT_APP_DB_URL}/comments/${item.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${cookies["accessToken"]}`,
+          },
+        }
+      );
     },
     {
       onSuccess: () => {
@@ -123,10 +143,10 @@ const Edit = ({ item, setUpdateState }) => {
   //edit
   const handleSubmit = () => {
     if (!value) {
-      return alert("내용을 입력해주세요");
+      return toast.warning("내용을 입력해주세요");
     } else {
       setValue("");
-      editMutation.mutate({ content: value });
+      editMutation.mutate({ content: value, uid: userSlice.uid });
       handleEditState();
     }
   };

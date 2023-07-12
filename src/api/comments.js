@@ -2,13 +2,18 @@ import axios from "axios";
 
 const getComments = async () => {
   const response = await axios.get(
-    `http://localhost:3001/comments?_sort=id&_order=desc`
+    `${process.env.REACT_APP_DB_URL}/comments?_sort=id&_order=desc`
+    // {
+    //   headers: {
+    //     Authorization: `Bearer ${cookies["accessToken"]}`,
+    //   },
+    // }
   );
   return response;
 };
 
 const addComments = async (newUpdate) => {
-  await axios.post(`http://localhost:3001/comments`, newUpdate);
+  await axios.post(`${process.env.REACT_APP_DB_URL}/comments`, newUpdate);
 };
 
 // const patchComments = async (newUpdate) => {

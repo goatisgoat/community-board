@@ -5,25 +5,46 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { storage } from "../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { addComments } from "../api/comments";
 import { useMutation, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
+import axios from "axios";
+import { useCookies } from "react-cookie";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const Write = () => {
   const navigate = useNavigate();
+  const { userSlice } = useSelector((state) => state.userSlice);
   const [isLoading, setIsLoading] = useState(false);
+  const [cookies, setCookie, removeCookie] = useCookies();
   //react-query
   const queryClient = useQueryClient();
-  const mutation = useMutation(addComments, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("comments");
-    },
-  });
+
+  const mutation = useMutation(
+    async (newInfo) =>
+      await axios.post(`http://localhost:3001/comments`, newInfo, {
+        headers: {
+          Authorization: `Bearer ${cookies["accessToken"]}`,
+        },
+      }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("comments");
+      },
+      onError: (error) => {
+        // 요청에 에러가 발생된 경우
+        toast.error("error", {
+          theme: "colored",
+        });
+      },
+    }
+  );
 
   //qill
   const [value, setValue] = useState("");
   const quillRef = useRef();
+
   const imageHandler = () => {
     const input = document.createElement("input");
     input.setAttribute("type", "file");
@@ -53,12 +74,13 @@ const Write = () => {
             }
           },
           (error) => {
-            console.log(error);
+            toast.error(error, {
+              theme: "colored",
+            });
           },
           () => {
             getDownloadURL(uploadTask.snapshot.ref).then(
               async (downloadURL) => {
-                console.log(downloadURL, "downloadURL");
                 const editor = quillRef.current.getEditor();
                 const range = editor.getSelection();
                 editor.insertEmbed(range.index, "image", downloadURL);
@@ -103,7 +125,7 @@ const Write = () => {
     if (!value) {
       return alert("내용을 입력해주세요");
     } else {
-      mutation.mutate({ content: value });
+      mutation.mutate({ content: value, uid: userSlice.uid });
       setValue("");
       navigate("/");
     }
@@ -117,7 +139,6 @@ const Write = () => {
           className="spinner"
           color="red"
           loading={true}
-          // cssOverride={}
           size={150}
           aria-label="Loading Spinner"
           data-testid="loader"
@@ -146,7 +167,7 @@ export default Write;
 
 const Container = styled.div`
   display: flex;
-  margin-top: 100px;
+  margin-top: 50px;
 `;
 
 const QuillContainer = styled.div`
@@ -154,14 +175,15 @@ const QuillContainer = styled.div`
   height: 100%;
   min-height: 100vh;
   border-right: 1px solid gray;
-  padding: 30px;
+  padding: 60px;
 `;
 
 const DisplayContents = styled.div`
   width: 50vw;
   height: 100vh;
-  padding: 30px;
+  padding: 60px;
   height: 100%;
+  margin-top: 30px;
 `;
 
 const EditBtn = styled.button`
