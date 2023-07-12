@@ -12,10 +12,20 @@ import { toast } from "react-toastify";
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  //onchange-input
+
   const [email, setEmail] = useInput();
   const [password, setPassword] = useInput();
   const [cookies, setCookie, removeCookie] = useCookies();
+
+  // const [email, setEmail] = useInput();
+  // const [password, setPassword] = useInput();
+  // const [cookies, setCookie,
+  //   const [email, setEmail] = useInput();
+  //   const [password, setPassword] = useInput();
+  //   const [cookies, setCookie,
+  //     const [email, setEmail] = useInput();
+  //     const [password, setPassword] = useInput();
+  //     const [cookies, setCookie,
 
   const goToSignUp = () => {
     navigate("/signup");
