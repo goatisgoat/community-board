@@ -23,3 +23,6 @@
 로그인
 ![image](https://github.com/goatisgoat/community-board/assets/129598273/dca9eb23-ac53-4a70-960e-34e71632bbca)
 
+메인페이지
+
+게시글작성 페이지
