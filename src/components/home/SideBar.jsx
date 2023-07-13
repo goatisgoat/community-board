@@ -35,7 +35,7 @@ const Users = () => {
       </p>
       <SideUserSpan>
         <div></div>
-        {isUser ? <p>{userSlice.name}</p> : <p>로그인 후 이용</p>}
+        {isUser ? <p>{userSlice.id}</p> : <p>로그인 후 이용</p>}
       </SideUserSpan>
     </SideContainer>
   );

@@ -9,39 +9,43 @@ import _ from "lodash";
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState("");
+  const [id, setId] = useState("");
   const [email, setEmail] = useState("");
   const [password, setpassword] = useState("");
 
-  const [emailMessage, setEmailMessage] = useState("");
+  const [idMessage, setIdMessage] = useState("");
   const [passMessage, setPassMessage] = useState("");
 
-  //name
-  const handleName = (e) => {
-    setName(e.target.value);
+  //id
+  const handleId = (e) => {
+    setId(e.target.value);
+    if (e.target.value === "") {
+      return setIdMessage("");
+    }
+    handleDebounceId(e.target.value);
   };
 
-  //email-debounce
-  const handleDebounceEmail = useCallback(
+  // id-debounce
+  const handleDebounceId = useCallback(
     _.debounce(async (text) => {
       const { data } = await axios.get(
         `${process.env.REACT_APP_DB_URL}/users/?q=${text}`
       );
       if (data.length === 1) {
-        return setEmailMessage("이미 존재하는 이메일입니다");
+        return setIdMessage("이미 존재하는 아이디입니다");
       }
     }, 2000),
     []
   );
 
-  //email
-  const handleEmail = async (e) => {
-    setEmail(e.target.value);
-    if (e.target.value === "") {
-      return setEmailMessage("");
-    }
-    handleDebounceEmail(e.target.value);
-  };
+  // // email
+  // const handleEmail = async (e) => {
+  //   setEmail(e.target.value);
+  //   if (e.target.value === "") {
+  //     return setIdMessage("");
+  //   }
+  //   handleDebounceId(e.target.value);
+  // };
 
   //password
   const handlePassword = (e) => {
@@ -61,24 +65,13 @@ const SignUp = () => {
   const handleSignUp = async (e) => {
     e.preventDefault();
 
-    const { data } = await axios.get(
-      `${process.env.REACT_APP_DB_URL}/users/?q=${email}`
-    );
-
-    if (data.length === 1) {
-      return setEmailMessage("이미 존재하는 이메일입니다");
-    }
-
     try {
       const { data } = await axios.post(
-        `${process.env.REACT_APP_DB_URL}/register`,
+        `${process.env.REACT_APP_RESISTER_URL}/register`,
         {
-          name,
-          email,
+          id,
           password,
-          uid: uuid(),
-        },
-        { withCredentials: true }
+        }
       );
       console.log(data);
       navigate("/login");
@@ -97,14 +90,15 @@ const SignUp = () => {
           <FormInputDiv>
             <input
               type="text"
-              name="name"
-              placeholder="name"
+              name="id"
+              placeholder="id"
               required
-              onChange={handleName}
+              onChange={handleId}
             />
+            <p>{idMessage}</p>
           </FormInputDiv>
 
-          <FormInputDiv>
+          {/* <FormInputDiv>
             <input
               type="email"
               name="email"
@@ -113,7 +107,7 @@ const SignUp = () => {
               onChange={handleEmail}
             />
             <p>{emailMessage}</p>
-          </FormInputDiv>
+          </FormInputDiv> */}
 
           <FormInputDiv>
             <input

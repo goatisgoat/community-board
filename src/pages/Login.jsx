@@ -8,24 +8,15 @@ import axios from "axios";
 import { handleUserSlice } from "../redux/moduls/userSlice";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import uuid from "react-uuid";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [email, setEmail] = useInput();
+  const [id, setId] = useInput();
   const [password, setPassword] = useInput();
   const [cookies, setCookie, removeCookie] = useCookies();
-
-  // const [email, setEmail] = useInput();
-  // const [password, setPassword] = useInput();
-  // const [cookies, setCookie,
-  //   const [email, setEmail] = useInput();
-  //   const [password, setPassword] = useInput();
-  //   const [cookies, setCookie,
-  //     const [email, setEmail] = useInput();
-  //     const [password, setPassword] = useInput();
-  //     const [cookies, setCookie,
 
   const goToSignUp = () => {
     navigate("/signup");
@@ -34,16 +25,22 @@ const Login = () => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        `${process.env.REACT_APP_DB_URL}/login`,
+        `${process.env.REACT_APP_RESISTER_URL}/login`,
         {
-          email,
+          id,
           password,
         }
       );
       console.log(data);
       // setcookie("쿠키 이름", "쿠키 값", 만료시간)
-      setCookie("accessToken", data["accessToken"], { path: "/" });
-      dispatch(handleUserSlice(data.user));
+      setCookie("accessToken", data["token"], { path: "/" });
+      dispatch(
+        handleUserSlice({
+          id,
+          password,
+          uid: uuid(),
+        })
+      );
       navigate("/");
     } catch (error) {
       toast.error("아이디 또는 비밀번호를 잘못 입력했습니다.");
@@ -52,16 +49,12 @@ const Login = () => {
 
   return (
     <>
+      {console.log(id)}
       <Navi>/login</Navi>
       <Container>
         <FormBox onSubmit={handleLogIn}>
           <h2>Welcome Back!</h2>
-          <input
-            type="email"
-            placeholder="email"
-            required
-            onChange={setEmail}
-          />
+          <input type="text" placeholder="id" required onChange={setId} />
           <input
             type="password"
             placeholder="password"

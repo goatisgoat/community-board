@@ -23,7 +23,7 @@ const Write = () => {
 
   const mutation = useMutation(
     async (newInfo) =>
-      await axios.post(`http://localhost:3001/comments`, newInfo, {
+      await axios.post(`${process.env.REACT_APP_DB_URL}/comments`, newInfo, {
         headers: {
           Authorization: `Bearer ${cookies["accessToken"]}`,
         },
