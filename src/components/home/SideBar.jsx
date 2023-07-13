@@ -10,27 +10,6 @@ const Users = () => {
   const navigate = useNavigate();
   const { isUser, userSlice } = useSelector((state) => state.userSlice);
 
-  // const navigate = useNavigate();
-  // const { isUser, userSlice } = useSelector((state) => state.userSlice);
-  // const navigate = useNavigate();
-  // const { isUser, userSlice } = useSelector((state) => state.userSlice);
-  // const navigate = useNavigate();
-  // const { isUser, userSlice } = useSelector((state) => state.userSlice);
-
-  // const navigate = useNavigate();
-  // const { isUser, userSlice } = useSelector((state) => state.userSlice);
-  // const navigate = useNavigate();
-  // const { isUser, userSlice } = useSelector((state) => state.userSlice);
-  // const navigate = useNavigate();
-  // const { isUser, userSlice } = useSelector((state) => state.userSlice);
-
-  // const navigate = useNavigate();
-  // const { isUser, userSlice } = useSelector((state) => state.userSlice);
-  // const navigate = useNavigate();
-  // const { isUser, userSlice } = useSelector((state) => state.userSlice);
-  // const navigate = useNavigate();
-  // const { isUser, userSlice } = useSelector((state) => state.userSlice);
-
   const goToWrite = () => {
     if (isUser) {
       navigate("/write");
