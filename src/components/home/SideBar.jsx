@@ -14,11 +14,12 @@ const Users = () => {
     if (isUser) {
       navigate("/write");
     } else {
-      toast.error("로그인 후 이용해주세요", {
+      toast.error("로그인 후 이용가능합니다", {
         theme: "colored",
       });
     }
   };
+
   return (
     <SideContainer>
       <p onClick={goToWrite}>
@@ -35,7 +36,7 @@ const Users = () => {
       </p>
       <SideUserSpan>
         <div></div>
-        {isUser ? <p>{userSlice.id}</p> : <p>로그인 후 이용</p>}
+        {isUser ? <p>{userSlice.name}</p> : <p>로그인 후 이용가능</p>}
       </SideUserSpan>
     </SideContainer>
   );

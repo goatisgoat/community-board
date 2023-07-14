@@ -34,7 +34,7 @@ const Write = () => {
       },
       onError: (error) => {
         // 요청에 에러가 발생된 경우
-        toast.error("error", {
+        toast.error("불러오기 실패", {
           theme: "colored",
         });
       },
@@ -74,7 +74,7 @@ const Write = () => {
             }
           },
           (error) => {
-            toast.error(error, {
+            toast.error("업로드 실패", {
               theme: "colored",
             });
           },
@@ -125,7 +125,11 @@ const Write = () => {
     if (!value) {
       return alert("내용을 입력해주세요");
     } else {
-      mutation.mutate({ content: value, uid: userSlice.uid });
+      mutation.mutate({
+        content: value,
+        uid: userSlice.uid,
+        username: userSlice.name,
+      });
       setValue("");
       navigate("/");
     }
@@ -133,16 +137,18 @@ const Write = () => {
 
   return (
     <>
-      <Navi />
+      <Navi boderBottomLine={true} backgroundColor={true}></Navi>
       {isLoading ? (
-        <ClipLoader
-          className="spinner"
-          color="red"
-          loading={true}
-          size={150}
-          aria-label="Loading Spinner"
-          data-testid="loader"
-        />
+        <SpinnerContainer>
+          <ClipLoader
+            className="spinner"
+            color="red"
+            loading={true}
+            size={130}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
+        </SpinnerContainer>
       ) : null}
       <Container>
         <QuillContainer>
@@ -164,6 +170,16 @@ const Write = () => {
 };
 
 export default Write;
+
+const SpinnerContainer = styled.div`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.536);
+  z-index: 99999;
+`;
 
 const Container = styled.div`
   display: flex;

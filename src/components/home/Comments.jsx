@@ -73,7 +73,7 @@ const Comments = () => {
 
             <UserImgSpan>
               <div></div>
-              <p>name</p>
+              <p>{item.username}</p>
             </UserImgSpan>
             <div
               dangerouslySetInnerHTML={{ __html: sanitizer(item.content) }}

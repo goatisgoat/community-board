@@ -9,43 +9,41 @@ import _ from "lodash";
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const [id, setId] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setpassword] = useState("");
 
-  const [idMessage, setIdMessage] = useState("");
+  const [emailMessage, setEmailMessage] = useState("");
   const [passMessage, setPassMessage] = useState("");
 
-  //id
-  const handleId = (e) => {
-    setId(e.target.value);
-    if (e.target.value === "") {
-      return setIdMessage("");
-    }
-    handleDebounceId(e.target.value);
+  //name
+  const handleName = (e) => {
+    setName(e.target.value);
   };
 
-  // id-debounce
-  const handleDebounceId = useCallback(
+  // email-debounce
+  const handleDebounceEmail = useCallback(
     _.debounce(async (text) => {
       const { data } = await axios.get(
-        `${process.env.REACT_APP_DB_URL}/users/?q=${text}`
+        `${process.env.REACT_APP_RESISTER_URL}/users/?q=${text}`
       );
-      if (data.length === 1) {
-        return setIdMessage("이미 존재하는 아이디입니다");
-      }
+      data.forEach((item) => {
+        if (item.email === text) {
+          return setEmailMessage("이미 존재하는 아이디입니다");
+        }
+      });
     }, 2000),
     []
   );
 
-  // // email
-  // const handleEmail = async (e) => {
-  //   setEmail(e.target.value);
-  //   if (e.target.value === "") {
-  //     return setIdMessage("");
-  //   }
-  //   handleDebounceId(e.target.value);
-  // };
+  // email
+  const handleEmail = async (e) => {
+    setEmail(e.target.value);
+    if (e.target.value === "") {
+      return setEmailMessage("");
+    }
+    handleDebounceEmail(e.target.value);
+  };
 
   //password
   const handlePassword = (e) => {
@@ -55,7 +53,7 @@ const SignUp = () => {
     if (e.target.value === "") {
       setPassMessage("");
     } else if (password.match(expExp)) {
-      setPassMessage("ok");
+      setPassMessage("사용가능한 비밀번호입니다");
     } else if (!password.match(expExp)) {
       return setPassMessage("대문자, 숫자포함 8글자");
     }
@@ -66,39 +64,37 @@ const SignUp = () => {
     e.preventDefault();
 
     try {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_RESISTER_URL}/register`,
-        {
-          id,
-          password,
-        }
-      );
-      console.log(data);
+      //json-server-auth사용
+      await axios.post(`${process.env.REACT_APP_RESISTER_URL}/register`, {
+        name,
+        email,
+        password,
+        uid: uuid(),
+      });
       navigate("/login");
     } catch (error) {
-      toast.error(error, {
+      toast.error("회원가입에 실패하였습니다", {
         theme: "colored",
       });
     }
   };
   return (
     <>
-      <Navi>/signup</Navi>
+      <Navi backgroundColor={false} />
       <Container>
         <FormBox onSubmit={handleSignUp}>
           <h2>Create an account</h2>
           <FormInputDiv>
             <input
               type="text"
-              name="id"
-              placeholder="id"
+              name="name"
+              placeholder="name"
               required
-              onChange={handleId}
+              onChange={handleName}
             />
-            <p>{idMessage}</p>
           </FormInputDiv>
 
-          {/* <FormInputDiv>
+          <FormInputDiv>
             <input
               type="email"
               name="email"
@@ -107,7 +103,7 @@ const SignUp = () => {
               onChange={handleEmail}
             />
             <p>{emailMessage}</p>
-          </FormInputDiv> */}
+          </FormInputDiv>
 
           <FormInputDiv>
             <input

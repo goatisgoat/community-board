@@ -9,9 +9,8 @@ import Button from "./Button";
 import { useCookies } from "react-cookie";
 import { useSelector } from "react-redux";
 
-const Navi = ({ children }) => {
+const Navi = ({ boderBottomLine, backgroundColor }) => {
   const { isUser } = useSelector((state) => state.userSlice);
-  const location = useLocation();
   const [cookies, setCookie, removeCookie] = useCookies();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -29,18 +28,25 @@ const Navi = ({ children }) => {
     navigate("/signup");
   };
 
+  //로그아웃
   const LogOut = () => {
     removeCookie("accessToken", { path: "/" });
     window.location.reload();
   };
+
+  //검색
   const handleSearch = (e) => {
     e.preventDefault();
     const userSearch = e.target[0].value;
     dispatch(handleSearchSlice(userSearch));
   };
+
   return (
-    <NavContainer navlo={location.pathname} propsch={children}>
-      <Logospan navlo={location.pathname}>
+    <NavContainer
+      boderBottomLine={boderBottomLine}
+      backgroundColor={backgroundColor}
+    >
+      <Logospan>
         <h1 onClick={goToHome}>Logo</h1>
         <p onClick={goToHome}>Home</p>
         <p onClick={goToHome}>Mypage</p>
@@ -72,16 +78,16 @@ const NavContainer = styled.div`
   width: 100%;
   height: 60px;
   background-color: ${(props) =>
-    props.navlo === props.propsch ? "transparent" : "white"};
+    props.backgroundColor ? "white" : "transparent"};
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   border-bottom: ${(props) =>
-    props.navlo === props.propsch ? "transparent" : "1px solid #767e7a85"};
+    props.boderBottomLine ? "1px solid #767e7a85" : "transparent"};
+  justify-content: space-between;
   z-index: 999;
 
   & > div {
@@ -104,7 +110,7 @@ const Logospan = styled.span`
     cursor: pointer;
   }
   & > p {
-    color: ${(props) => (props.navlo === "/login" ? "#6a9582;" : "gray")};
+    color: #6a9582;
     margin-left: 8px;
     font-size: 15px;
     font-family: sans-serif;

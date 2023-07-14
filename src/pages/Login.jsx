@@ -8,13 +8,12 @@ import axios from "axios";
 import { handleUserSlice } from "../redux/moduls/userSlice";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import uuid from "react-uuid";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [id, setId] = useInput();
+  const [email, setEmail] = useInput();
   const [password, setPassword] = useInput();
   const [cookies, setCookie, removeCookie] = useCookies();
 
@@ -24,39 +23,51 @@ const Login = () => {
   const handleLogIn = async (e) => {
     e.preventDefault();
     try {
+      //json-server-auth사용
       const { data } = await axios.post(
         `${process.env.REACT_APP_RESISTER_URL}/login`,
         {
-          id,
+          email,
           password,
         }
       );
+
       console.log(data);
       // setcookie("쿠키 이름", "쿠키 값", 만료시간)
-      setCookie("accessToken", data["token"], { path: "/" });
+      setCookie("accessToken", data["accessToken"], { path: "/" });
+      //redux-toolkit
       dispatch(
         handleUserSlice({
-          id,
+          email,
           password,
-          uid: uuid(),
+          uid: data.user.uid,
+          name: data.user.name,
         })
       );
       navigate("/");
     } catch (error) {
-      toast.error("아이디 또는 비밀번호를 잘못 입력했습니다.");
+      toast.error("아이디 또는 비밀번호를 잘못 입력했습니다.", {
+        theme: "colored",
+      });
     }
   };
 
   return (
     <>
-      {console.log(id)}
-      <Navi>/login</Navi>
+      <Navi backgroundColor={false} />
       <Container>
         <FormBox onSubmit={handleLogIn}>
           <h2>Welcome Back!</h2>
-          <input type="text" placeholder="id" required onChange={setId} />
+          <input
+            type="email"
+            name="email"
+            placeholder="email"
+            required
+            onChange={setEmail}
+          />
           <input
             type="password"
+            name="password"
             placeholder="password"
             required
             onChange={setPassword}

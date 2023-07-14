@@ -12,10 +12,12 @@ import "react-quill/dist/quill.snow.css";
 import { useCookies } from "react-cookie";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const Edit = ({ item, setUpdateState }) => {
   const [cookies, setCookie, removeCookie] = useCookies();
   const { userSlice } = useSelector((state) => state.userSlice);
+  const [isLoading, setIsLoading] = useState(false);
   //qill
   const [value, setValue] = useState(item.content);
   const quillRef = useRef();
@@ -27,6 +29,7 @@ const Edit = ({ item, setUpdateState }) => {
     input.click();
 
     input.addEventListener("change", async (e) => {
+      setIsLoading(true);
       const file = input.files[0];
       try {
         const storageRef = ref(storage, file.name);
@@ -48,7 +51,9 @@ const Edit = ({ item, setUpdateState }) => {
             }
           },
           (error) => {
-            toast.error("error!");
+            toast.error("업로드 오류", {
+              theme: "colored",
+            });
           },
           () => {
             getDownloadURL(uploadTask.snapshot.ref).then(
@@ -58,12 +63,15 @@ const Edit = ({ item, setUpdateState }) => {
                 const range = editor.getSelection();
                 editor.insertEmbed(range.index, "image", downloadURL);
                 editor.setSelection(range.index + 1);
+                setIsLoading(false);
               }
             );
           }
         );
       } catch (error) {
-        toast.error("error!");
+        toast.error("업로드 오류", {
+          theme: "colored",
+        });
       }
     });
   };
@@ -146,17 +154,34 @@ const Edit = ({ item, setUpdateState }) => {
       return toast.warning("내용을 입력해주세요");
     } else {
       setValue("");
-      editMutation.mutate({ content: value, uid: userSlice.uid });
+      editMutation.mutate({
+        content: value,
+        uid: userSlice.uid,
+        username: userSlice.name,
+      });
       handleEditState();
     }
   };
 
+  //돌아가기
   const handleEditState = () => {
     setUpdateState(-1);
   };
 
   return (
     <CommentsContainer>
+      {isLoading ? (
+        <SpinnerContainer>
+          <ClipLoader
+            className="spinner"
+            color="red"
+            loading={true}
+            size={130}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
+        </SpinnerContainer>
+      ) : null}
       <FontSpan>
         <FontAwesomeIcon onClick={handleEditState} icon={faRotateLeft} />
       </FontSpan>
@@ -181,6 +206,16 @@ const Edit = ({ item, setUpdateState }) => {
 };
 
 export default Edit;
+
+const SpinnerContainer = styled.div`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.536);
+  z-index: 99999;
+`;
 
 const CommentsContainer = styled.div`
   max-width: 600px;

@@ -16,17 +16,20 @@ const Home = () => {
   const goToWriting = () => {
     if (isUser) {
       navigate("/write");
+    } else {
+      toast.error("로그인 후 이용가능합니다", {
+        theme: "colored",
+      });
     }
   };
   return (
     <>
-      <Navi />
+      <Navi backgroundColor={true} />
       <Container>
         <SideBar />
         <Comments />
-        <UserInputBtn onClick={() => goToWriting}>+</UserInputBtn>
+        <UserInputBtn onClick={goToWriting}>+</UserInputBtn>
       </Container>
-      {/* <Footer /> */}
     </>
   );
 };
