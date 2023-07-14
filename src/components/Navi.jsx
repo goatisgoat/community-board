@@ -9,7 +9,7 @@ import Button from "./Button";
 import { useCookies } from "react-cookie";
 import { useSelector } from "react-redux";
 
-const Navi = ({ boderBottomLine, backgroundColor }) => {
+const Navi = ({ boderBottomLine, navibackgroundcolor }) => {
   const { isUser } = useSelector((state) => state.userSlice);
   const [cookies, setCookie, removeCookie] = useCookies();
   const navigate = useNavigate();
@@ -44,7 +44,7 @@ const Navi = ({ boderBottomLine, backgroundColor }) => {
   return (
     <NavContainer
       boderBottomLine={boderBottomLine}
-      backgroundColor={backgroundColor}
+      navibackgroundcolor={navibackgroundcolor}
     >
       <Logospan>
         <h1 onClick={goToHome}>Logo</h1>
@@ -78,7 +78,7 @@ const NavContainer = styled.div`
   width: 100%;
   height: 60px;
   background-color: ${(props) =>
-    props.backgroundColor ? "white" : "transparent"};
+    props.navibackgroundcolor ? "white" : "transparent"};
   position: fixed;
   top: 0;
   left: 0;

@@ -32,8 +32,6 @@ const Comments = () => {
     },
   });
 
-  console.log(data);
-
   //edit
   const handleEditState = (id) => {
     setUpdateState(id);

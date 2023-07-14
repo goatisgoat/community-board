@@ -112,6 +112,7 @@ const Write = () => {
       },
     };
   }, []);
+
   // 위에서 설정한 모듈들 foramts을 설정한다
   const formats = [
     "header",
@@ -139,7 +140,7 @@ const Write = () => {
 
   return (
     <>
-      <Navi boderBottomLine={true} backgroundColor={true}></Navi>
+      <Navi boderBottomLine={true} navibackgroundcolor={true}></Navi>
       {isLoading ? (
         <SpinnerContainer>
           <ClipLoader

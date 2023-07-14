@@ -55,7 +55,7 @@ const Login = () => {
 
   return (
     <>
-      <Navi backgroundColor={false} />
+      <Navi navibackgroundcolor={false} />
       <Container>
         <FormBox onSubmit={handleLogIn}>
           <h2>Welcome Back!</h2>

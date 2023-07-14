@@ -11,8 +11,6 @@ const Home = () => {
   const navigate = useNavigate();
   const { userSlice, isUser } = useSelector((state) => state.userSlice);
 
-  console.log(userSlice, "sdfsfdfsd");
-
   const goToWriting = () => {
     if (isUser) {
       navigate("/write");
@@ -24,7 +22,7 @@ const Home = () => {
   };
   return (
     <>
-      <Navi backgroundColor={true} />
+      <Navi navibackgroundcolor={true} />
       <Container>
         <SideBar />
         <Comments />

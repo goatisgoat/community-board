@@ -81,7 +81,7 @@ const SignUp = () => {
   };
   return (
     <>
-      <Navi backgroundColor={false} />
+      <Navi navibackgroundcolor={false} />
       <Container>
         <FormBox onSubmit={handleSignUp}>
           <h2>Create an account</h2>
