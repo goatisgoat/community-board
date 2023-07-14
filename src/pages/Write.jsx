@@ -12,12 +12,14 @@ import axios from "axios";
 import { useCookies } from "react-cookie";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import dompurify from "dompurify";
 
 const Write = () => {
   const navigate = useNavigate();
   const { userSlice } = useSelector((state) => state.userSlice);
   const [isLoading, setIsLoading] = useState(false);
   const [cookies, setCookie, removeCookie] = useCookies();
+  const sanitizer = dompurify.sanitize;
   //react-query
   const queryClient = useQueryClient();
 
@@ -161,7 +163,7 @@ const Write = () => {
           />
         </QuillContainer>
         <DisplayContents
-          dangerouslySetInnerHTML={{ __html: value }}
+          dangerouslySetInnerHTML={{ __html: sanitizer(value) }}
         ></DisplayContents>
         <EditBtn onClick={handleSubmit}>Post</EditBtn>
       </Container>
