@@ -24,6 +24,7 @@ const Login = () => {
     e.preventDefault();
     try {
       //json-server-auth사용
+      //yarn json-server-auth --watch db.json --port 3001
       const { data } = await axios.post(
         `${process.env.REACT_APP_RESISTER_URL}/login`,
         {
@@ -51,7 +52,7 @@ const Login = () => {
       });
     }
   };
-  //sdfdsfdsfsdfsfsdfds
+
   return (
     <>
       <Navi backgroundColor={false} />

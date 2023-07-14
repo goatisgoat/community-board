@@ -65,6 +65,7 @@ const SignUp = () => {
 
     try {
       //json-server-auth사용
+      //yarn json-server-auth --watch db.json --port 3001
       await axios.post(`${process.env.REACT_APP_RESISTER_URL}/register`, {
         name,
         email,
