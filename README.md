@@ -18,11 +18,16 @@
 
 ## 화면구성
 회원가입
-![image](https://github.com/goatisgoat/community-board/assets/129598273/99608a43-278c-4dc2-bab6-f0a5cfe91737)
+![image](https://github.com/goatisgoat/community-board/assets/129598273/e0c7e7c7-17dc-4adb-9e04-da200e661e43)
+
 
 로그인
-![image](https://github.com/goatisgoat/community-board/assets/129598273/dca9eb23-ac53-4a70-960e-34e71632bbca)
+![image](https://github.com/goatisgoat/community-board/assets/129598273/63d415c8-e686-4b20-a40f-41b4079a6ff1)
+
 
 메인페이지
+![image](https://github.com/goatisgoat/community-board/assets/129598273/cb0832b9-df04-4ed4-a216-d97abd10a50e)
 
 게시글작성 페이지
+![image](https://github.com/goatisgoat/community-board/assets/129598273/d8ac73d2-9fb4-4136-b462-51ad3fcd0067)
+
